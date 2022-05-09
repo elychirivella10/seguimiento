@@ -1,7 +1,7 @@
 <?php
 
 use \Firebase\JWT\JWT;
-
+$hola="hola";
 class Auth {
     private static $secret_key = '814751571e197af005fa3505cdbb5d50';
     private static $encrypt = ['HS256'];
