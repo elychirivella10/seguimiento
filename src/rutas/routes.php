@@ -360,7 +360,7 @@ $app->get('/api/reportes/all[/{params:.*}]', function (Request $request, Respons
 
 
 
-//////////////////////////////// DESPLEGABLE DE ESTADO, MUNICIPIO Y PARROQUIA ///////////////////////////////////////////
+//////////////////////////////// DESPLEGABLES ///////////////////////////////////////////
 
 //////////////////////////////////////ESTADOS
 $app->get('/api/desplegables/estados[/{id}]', function (Request $request, Response $response) {
@@ -417,19 +417,59 @@ $app->get('/api/desplegables/estados[/{id}]', function (Request $request, Respon
     });
 
 
+
+    $app->get('/api/desplegables/pozos/{id_estado}', function (Request $request, Response $response) {
+        $id = $request->getAttribute('id_estado');
+                
+        $sql = "SELECT `pozo`.*, `estados`.`estado`
+        FROM `pozo` 
+            LEFT JOIN `estados` ON `pozo`.`id_estado` = `estados`.`id_estado`
+            WHERE estados.id_estado = ?";
+                    $db = New DB();
+        
+             return json_encode($db->consultaAll('mapa',$sql,[$id]));
+                    
+                    
+    });
+
+
+    $app->get('/api/desplegables/brippas/{id_estado}', function (Request $request, Response $response) {
+        $id = $request->getAttribute('id_estado');
+                
+        $sql = "SELECT `brippas`.*, `estados`.`estado`
+        FROM `brippas` 
+            LEFT JOIN `estados` ON `brippas`.`id_estado` = `estados`.`id_estado`
+            WHERE estados.id_estado = ?";
+                    $db = New DB();
+        
+             return json_encode($db->consultaAll('mapa',$sql,[$id]));
+                    
+                    
+    });
+
+
+    $app->get('/api/desplegables/sistemas', function (Request $request, Response $response) {
+                
+        $sql = "SELECT * FROM `sistemas`";
+                    $db = New DB();
+        
+             return json_encode($db->consultaAll('mapa',$sql));
+                
+    });
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                   
 
 
 $app->get('/api/reportes/emp[/{params:.*}]', function (Request $request, Response $response, $args) {
     $params = EliminarBarrasURL($args['params']);   
-    
-    /*  0 - Tipo de formulario
+    /*
+    0 - Tipo de formulario ($Tabla a consultar)
     1 - Estado
     2 - Municipio
     3 - Parroquia     */    
     $db = New DB();
-    
+    /**/
     $TablaConsultar = [
         'produccion',//0 
         'rehabilitacion_pozo',//1 
